@@ -119,6 +119,7 @@ export function Post({ author, publishedAt, content }) {
           return (
             <Comment
               key={comment}
+              author="Musa Marveira"
               content={comment}
               onDeleteComment={deleteComment}
             />
@@ -127,9 +128,4 @@ export function Post({ author, publishedAt, content }) {
       </div>
     </article>
   );
-}
-
-{
-  /* <Comment author="Frederico Pereira" content="Muito bom! Parabéns!!" />
-<Comment author="Musa Marveira" content="Aprendi muito também!" /> */
 }
