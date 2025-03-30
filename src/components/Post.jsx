@@ -6,8 +6,15 @@ import { Comment } from "./Comment";
 
 import { User } from "phosphor-react";
 import styles from "./Post.module.css";
+import { useState } from "react"; // Variáveis que o componente REACT deve monitorar para ser exibido a cada alteração
 
 export function Post({ author, publishedAt, content }) {
+  const [comments, setComments] = useState([
+    "Foi um dia de muito aprendizado!",
+  ]);
+
+  const [newCommentText, setNewCommentText] = useState("");
+
   const publishedDateFormatted = format(
     publishedAt,
     "d 'de' LLLL 'às' H:mm'h'",
@@ -18,6 +25,32 @@ export function Post({ author, publishedAt, content }) {
     locale: ptBR,
     addSuffix: true,
   });
+
+  function handleCreateNewComment() {
+    event.preventDefault();
+
+    // const newCommentText = event.target.comment.value;
+
+    // Programação imperativa > O que deve ser feito para se alcançar determinado resultado (passo a passo como algoritmo)
+    // Programação declarativa > Quais as condições existentes para ter o resultado final
+
+    setComments([...comments, newCommentText]); // Imutabilidade (...comments)
+    setNewCommentText("");
+    // event.target.comment.value = "";
+  }
+
+  function handleNewCommentChange() {
+    setNewCommentText(event.target.value);
+  }
+
+  // Imutabilidade > A informação nunca é alterada; em vez disso, uma nova informação é criada e salva dentro do estado.
+  function deleteComment(commentToDelete) {
+    const commentsWithoutDeletedOne = comments.filter((comment) => {
+      return comment !== commentToDelete;
+    });
+
+    setComments(commentsWithoutDeletedOne);
+  }
 
   return (
     <article className={styles.post}>
@@ -43,10 +76,10 @@ export function Post({ author, publishedAt, content }) {
       <div className={styles.content}>
         {content.map((line) => {
           if (line.type === "paragraph") {
-            return <p>{line.content}</p>;
+            return <p key={line.content}>{line.content}</p>;
           } else if (line.type === "link") {
             return (
-              <p>
+              <p key={line.content}>
                 <a href="#">{line.content}</a>
               </p>
             );
@@ -55,21 +88,36 @@ export function Post({ author, publishedAt, content }) {
       </div>
 
       {/* Campo de respostas   */}
-      <form className={styles.commentForm}>
+      <form onSubmit={handleCreateNewComment} className={styles.commentForm}>
         <strong>Responder</strong>
-        <textarea placeholder="Adicionar resposta" />
+
+        <textarea
+          name="comment"
+          placeholder="Adicionar resposta"
+          value={newCommentText}
+          onChange={handleNewCommentChange}
+        />
         <footer>
           <button type="submit">Responder</button>
         </footer>
       </form>
 
       <div className={styles.commentList}>
-        <Comment author="Frederico Pereira" content="Muito bom! Parabéns!!" />
-        <Comment
-          author="Musa Marveira"
-          content="Aprendi muito também!"
-        ></Comment>
+        {comments.map((comment) => {
+          return (
+            <Comment
+              key={comment}
+              content={comment}
+              onDeleteComment={deleteComment}
+            />
+          );
+        })}
       </div>
     </article>
   );
+}
+
+{
+  /* <Comment author="Frederico Pereira" content="Muito bom! Parabéns!!" />
+<Comment author="Musa Marveira" content="Aprendi muito também!" /> */
 }

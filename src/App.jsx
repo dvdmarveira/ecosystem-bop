@@ -49,11 +49,6 @@ const posts = [
         content:
           "Aprendi muito sobre desenvolvimento de aplicativos móveis e as dicas dos palestrantes foram muito valiosas. A organização do evento também estava impecável.",
       },
-      {
-        type: "paragraph",
-        content:
-          "Com certeza, participarei de outros eventos promovidos por essa equipe!",
-      },
     ],
     publishedAt: new Date("2025-03-26 20:00"),
   },
@@ -70,6 +65,7 @@ export function App() {
           {posts.map((post) => {
             return (
               <Post
+                key={post.id}
                 author={post.author}
                 content={post.content}
                 publishedAt={post.publishedAt}
