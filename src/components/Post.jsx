@@ -40,7 +40,12 @@ export function Post({ author, publishedAt, content }) {
   }
 
   function handleNewCommentChange() {
+    event.target.setCustomValidity("");
     setNewCommentText(event.target.value);
+  }
+
+  function handleNewCommentInvalid() {
+    event.target.setCustomValidity("Esse campo é obrigatório!");
   }
 
   // Imutabilidade > A informação nunca é alterada; em vez disso, uma nova informação é criada e salva dentro do estado.
@@ -51,6 +56,8 @@ export function Post({ author, publishedAt, content }) {
 
     setComments(commentsWithoutDeletedOne);
   }
+
+  const isNewCommentEmpty = newCommentText.length === 0;
 
   return (
     <article className={styles.post}>
@@ -96,9 +103,14 @@ export function Post({ author, publishedAt, content }) {
           placeholder="Adicionar resposta"
           value={newCommentText}
           onChange={handleNewCommentChange}
+          onInvalid={handleNewCommentInvalid}
+          required
         />
+
         <footer>
-          <button type="submit">Responder</button>
+          <button type="submit" disabled={isNewCommentEmpty}>
+            Responder
+          </button>
         </footer>
       </form>
 
